@@ -121,6 +121,12 @@ else()
     set(SPDLOG_CLOCK_COARSE OFF CACHE BOOL "non supported option" FORCE)
 endif()
 
+if(${CMAKE_SYSTEM_NAME} STREQUAL "QNX")
+    option(SPDLOG_QNX "Using spdlog for QNX" ON)
+else()
+  option(SPDLOG_QNX "Using spdlog for QNX" OFF)
+endif()
+
 option(SPDLOG_PREVENT_CHILD_FD "Prevent from child processes to inherit log file descriptors" OFF)
 option(SPDLOG_NO_THREAD_ID "prevent spdlog from querying the thread id on each log call if thread id is not needed" OFF)
 option(SPDLOG_NO_TLS "prevent spdlog from using thread local storage" OFF)
@@ -143,7 +149,10 @@ if(SPDLOG_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-find_package(Threads REQUIRED)
+if(NOT SPDLOG_QNX)
+    find_package(Threads REQUIRED)
+endif()
+
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 # ---------------------------------------------------------------------------------------
 # Static/Shared library
@@ -182,7 +191,13 @@ endif()
 target_compile_definitions(spdlog PUBLIC SPDLOG_COMPILED_LIB)
 target_include_directories(spdlog ${SPDLOG_INCLUDES_LEVEL} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-target_link_libraries(spdlog PUBLIC Threads::Threads)
+if(SPDLOG_QNX)
+  target_compile_definitions(spdlog PUBLIC _QNX_SOURCE)
+  target_link_libraries(spdlog PUBLIC socket)
+else()
+    target_link_libraries(spdlog PUBLIC Threads::Threads)
+endif()
+
 spdlog_enable_warnings(spdlog)
 
 set_target_properties(spdlog PROPERTIES VERSION ${SPDLOG_VERSION} SOVERSION
@@ -203,7 +218,10 @@ add_library(spdlog::spdlog_header_only ALIAS spdlog_header_only)
 target_include_directories(
     spdlog_header_only ${SPDLOG_INCLUDES_LEVEL} INTERFACE "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                           "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-target_link_libraries(spdlog_header_only INTERFACE Threads::Threads)
+
+if(NOT SPDLOG_QNX)
+    target_link_libraries(spdlog_header_only INTERFACE Threads::Threads)
+endif()
 
 # ---------------------------------------------------------------------------------------
 # Use fmt package if using external fmt
