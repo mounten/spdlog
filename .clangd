@@ -1,0 +1,4 @@
+CompileFlags:
+    Add: [-D__QNXNTO__, -D__LITTLEENDIAN__, -D__ARM__]
+    Remove: [-V*]
+    Compiler: ntoarmv7-g++-5.4.0.exe
