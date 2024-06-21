@@ -270,12 +270,26 @@ struct my_type {
 };
 
 #ifndef SPDLOG_USE_STD_FORMAT  // when using fmtlib
+
+namespace fmt {
+inline namespace v10 {
+
 template <>
-struct fmt::formatter<my_type> : fmt::formatter<std::string> {
+struct formatter<my_type> : formatter<std::string> {
     auto format(my_type my, format_context &ctx) -> decltype(ctx.out()) {
         return fmt::format_to(ctx.out(), "[my_type i={}]", my.i);
     }
 };
+
+}  // namespace v10
+}  // namespace fmt
+
+// template <>
+// struct fmt::v10::formatter<my_type> : fmt::v10::formatter<std::string> {
+//     auto format(my_type my, format_context &ctx) -> decltype(ctx.out()) {
+//         return fmt::format_to(ctx.out(), "[my_type i={}]", my.i);
+//     }
+// };
 
 #else  // when using std::format
 template <>
@@ -379,12 +393,12 @@ void replace_default_logger_example() {
     spdlog::set_default_logger(old_logger);
 }
 
-// Mapped Diagnostic Context (MDC) is a map that stores key-value pairs (string values) in thread local storage.
-// Each thread maintains its own MDC, which loggers use to append diagnostic information to log outputs.
-// Note: it is not supported in asynchronous mode due to its reliance on thread-local storage.
+// Mapped Diagnostic Context (MDC) is a map that stores key-value pairs (string values) in thread
+// local storage. Each thread maintains its own MDC, which loggers use to append diagnostic
+// information to log outputs. Note: it is not supported in asynchronous mode due to its reliance on
+// thread-local storage.
 #include "spdlog/mdc.h"
-void mdc_example()
-{
+void mdc_example() {
     spdlog::mdc::put("key1", "value1");
     spdlog::mdc::put("key2", "value2");
     // if not using the default format, you can use the %& formatter to print mdc data as well
