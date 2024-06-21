@@ -19,20 +19,7 @@ see example [CMakeLists.txt](https://github.com/gabime/spdlog/blob/v1.x/example/
 * Windows (msvc 2013+, cygwin)
 * macOS (clang 3.5+)
 * Android
-
-## Package managers:
-* Debian: `sudo apt install libspdlog-dev`
-* Homebrew: `brew install spdlog`
-* MacPorts: `sudo port install spdlog`
-* FreeBSD:  `pkg install spdlog`
-* Fedora: `dnf install spdlog`
-* Gentoo: `emerge dev-libs/spdlog`
-* Arch Linux: `pacman -S spdlog`
-* openSUSE: `sudo zypper in spdlog-devel`
-* vcpkg: `vcpkg install spdlog`
-* conan: `spdlog/[>=1.4.1]`
-* conda: `conda install -c conda-forge spdlog`
-* build2: ```depends: spdlog ^1.8.2```
+* QNX (7.0)
 
 
 ## Features
