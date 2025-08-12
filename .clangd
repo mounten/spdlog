@@ -1,4 +1,4 @@
 CompileFlags:
-    Add: [-D__QNXNTO__, -D__LITTLEENDIAN__, -D__ARM__]
+    Add: [-D__QNX__=800, -D__QNXNTO__, -D__unix__, -D__ELF__, -D__X86_64__, -D __LITTLEENDIAN__]
     Remove: [-V*]
-    Compiler: ntoarmv7-g++-5.4.0.exe
+    Compiler: ntox86_64-g++
