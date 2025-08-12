@@ -121,10 +121,10 @@ else()
     set(SPDLOG_CLOCK_COARSE OFF CACHE BOOL "non supported option" FORCE)
 endif()
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL "QNX")
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "QNX")
     option(SPDLOG_QNX "Using spdlog for QNX" ON)
 else()
-  option(SPDLOG_QNX "Using spdlog for QNX" OFF)
+    option(SPDLOG_QNX "Using spdlog for QNX" OFF)
 endif()
 
 option(SPDLOG_PREVENT_CHILD_FD "Prevent from child processes to inherit log file descriptors" OFF)
